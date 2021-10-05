@@ -1,7 +1,13 @@
 <h1>Signup</h1>
 
-<form method="post">
-    {% csrf_token %}
+
+{% if err %}
+
+    <h2 style="color: red;">{{ err }}</h2>
+
+{% endif %}
+
+<form method="post">{% csrf_token %} 
     {{ signupform.as_p }}
     
     <button type="submit">Sign Up</button>
