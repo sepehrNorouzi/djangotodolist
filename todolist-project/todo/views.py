@@ -5,6 +5,9 @@ from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
+from todo.forms import TodoForm
+from .models import Todo
+
 
 
 def home(request):
@@ -52,4 +55,21 @@ def logoutuser(request):
 
 @login_required
 def currenttodos(request):
-    return render(request, 'todo/currenttodos.html')
+    todos = Todo.objects.all().filter(user=request.user, completed_at__isnull=True)
+    return render(request, 'todo/currenttodos.html', {'todos': todos})
+
+
+@login_required
+@csrf_protect
+def createtodo(request):
+    if request.method == 'GET':
+        return render(request, 'todo/createtodo.html', {'todoform': TodoForm()})
+    else:
+        try:
+            form = TodoForm(request.POST)
+            newTodo = form.save(commit=False)
+            newTodo.user = request.user
+            newTodo.save()
+            return redirect('currenttodos')
+        except ValueError:
+            return render(request, 'todo/createtodo.html', {'todoform': TodoForm(), 'err': 'Bad Input.'})

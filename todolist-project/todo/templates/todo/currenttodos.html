@@ -4,4 +4,10 @@
 
 <h1>Current Todos</h1>
 
+{% for todo in todos %}
+<h2>
+    {{ todo.title }}
+</h2>
+{% endfor %}
+
 {% endblock %}
