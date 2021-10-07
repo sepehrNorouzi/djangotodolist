@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.db import IntegrityError
 from django.views.decorators.csrf import csrf_protect
+from django.contrib.auth.decorators import login_required
 
+
+def home(request):
+    return render(request, 'todo/home.html')
 
 @csrf_protect
 def signupuser(request):
@@ -25,5 +29,13 @@ def signupuser(request):
             return render(request, 'todo/signupuser.html', {'signupform': UserCreationForm(), 'err': 'Passwords did not match!'})
 
 
+@csrf_protect
+def logoutuser(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('home')
+
+
+@login_required
 def currenttodos(request):
     return render(request, 'todo/currenttodos.html')
