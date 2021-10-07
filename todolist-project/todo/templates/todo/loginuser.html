@@ -1,0 +1,19 @@
+{% extends "./base.html" %}
+
+{% block content %}
+<h1>Login</h1>
+
+
+{% if err %}
+
+    <h2 style="color: red;">{{ err }}</h2>
+
+{% endif %}
+
+<form method="post">{% csrf_token %} 
+    {{ loginform.as_p }}
+    
+    <button type="submit">Log in</button>
+</form>
+
+{% endblock %}
